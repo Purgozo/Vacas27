@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vacas27 — Calendario 2027</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-left">
+      <div class="legend-tools" id="legend-tools-left" role="radiogroup" aria-label="Seleccionar herramienta">
+        <button type="button" class="tool-btn tool-color" data-tool="color-0" data-color="#f06292" role="radio" aria-checked="true" title="Color 1 (rosa)">
+          <span class="tool-swatch" style="background:#f06292"></span>
+        </button>
+        <button type="button" class="tool-btn tool-color" data-tool="color-1" data-color="#81c784" role="radio" aria-checked="false" title="Color 2 (verde)">
+          <span class="tool-swatch" style="background:#81c784"></span>
+        </button>
+        <button type="button" class="tool-btn tool-color" data-tool="color-2" data-color="#64b5f6" role="radio" aria-checked="false" title="Color 3 (azul)">
+          <span class="tool-swatch" style="background:#64b5f6"></span>
+        </button>
+        <button type="button" class="tool-btn tool-erase" data-tool="erase" role="radio" aria-checked="false" title="Borrar">
+          <svg class="tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <h1 class="header-title">Vacas27</h1>
+    <div class="header-right">
+      <div class="controls">
+        <div class="control-group">
+          <label for="turno-select">Turno</label>
+          <select id="turno-select">
+            <option value="M">Turno M (mañana)</option>
+            <option value="T">Turno T (tarde)</option>
+            <option value="A">Turno A (alterno, empieza T)</option>
+            <option value="B">Turno B (alterno, empieza M)</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label for="grupo-select">Grupo</label>
+          <select id="grupo-select">
+            <option value="1">Grupo 1</option>
+            <option value="2">Grupo 2</option>
+            <option value="3">Grupo 3</option>
+            <option value="4">Grupo 4</option>
+            <option value="5">Grupo 5</option>
+            <option value="6">Grupo 6</option>
+          </select>
+        </div>
+      </div>
+      <div class="legend-tools" id="legend-tools-right" role="radiogroup" aria-label="Acciones">
+        <button type="button" id="undo-btn" class="btn-undo" disabled aria-label="Deshacer última acción" title="Deshacer (Ctrl+Z)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 7v6h6M3 13a9 9 0 1 0 2.7-6.3L3 7"/>
+          </svg>
+          <span>Deshacer</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="calendar-section" aria-label="Calendario 2027">
+      <div id="calendar"></div>
+    </section>
+
+    <aside class="sidebar" aria-label="Estadísticas">
+      <section class="stats">
+        <h2>Resumen</h2>
+        <div class="stats-grid" id="stats-grid">
+          <div class="stat-item">
+            <span class="stat-label">Color 1</span>
+            <span class="stat-value" id="stat-color-0">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Color 2</span>
+            <span class="stat-value" id="stat-color-1">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Color 3</span>
+            <span class="stat-value" id="stat-color-2">0</span>
+          </div>
+          <div class="stat-item stat-total">
+            <span class="stat-label">Total pintados</span>
+            <span class="stat-value" id="stat-total">0</span>
+          </div>
+          <div class="stat-item stat-long-weekends">
+            <span class="stat-label">Fines de semana largos</span>
+            <span class="stat-value" id="stat-long-weekends">0</span>
+          </div>
+          <div class="stat-item stat-sundays-vacation">
+            <span class="stat-label">Domingos en vacaciones</span>
+            <span class="stat-value" id="stat-sundays-in-vacation">0</span>
+          </div>
+          <div class="stat-item stat-rest-vacation">
+            <span class="stat-label">Descansos en vacaciones</span>
+            <span class="stat-value" id="stat-rest-days-in-vacation">0</span>
+          </div>
+        </div>
+      </section>
+    </aside>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

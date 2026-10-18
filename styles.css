@@ -1,0 +1,333 @@
+/* ========================================
+   Vacas27 — styles.css
+   Mobile-first, compacto, multi-columna
+   ======================================== */
+
+/* ----- Reset & base ----- */
+*, *::before, *::after { box-sizing: border-box; }
+html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.5;
+  color: #1a1a2e;
+  background: #f5f5f7;
+  min-height: 100vh;
+}
+
+/* ----- Variables responsivas ----- */
+:root {
+  --day-size: 36px;
+  --day-font: 0.75rem;
+  --turn-width: 28px;
+  --month-gap: 0.5rem;
+}
+
+/* ----- Header ----- */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 0.5rem 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.header-left, .header-right { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+.header-right { justify-content: flex-end; }
+.header-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  flex: 1;
+  text-align: center;
+  min-width: 150px;
+}
+.controls { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: flex-end; }
+.control-group { display: flex; flex-direction: column; gap: 0.15rem; min-width: 120px; }
+.control-group label { font-size: 0.65rem; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+.control-group select {
+  padding: 0.35rem 1.5rem 0.35rem 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fafafa;
+  font: inherit;
+  font-size: 0.8rem;
+  color: inherit;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.35rem center;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.control-group select:focus { outline: none; border-color: #64b5f6; box-shadow: 0 0 0 3px rgba(100,181,246,0.2); }
+
+/* ----- Main Layout ----- */
+.main { display: flex; flex-direction: column; padding: 0.5rem; gap: 0.5rem; max-width: 100%; }
+.calendar-section { flex: 1; min-width: 0; }
+.sidebar { flex: 0 0 auto; width: 100%; display: flex; flex-direction: column; gap: 0.75rem; }
+
+/* ----- Calendar Grid (Multi-column) ----- */
+#calendar {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--month-gap);
+}
+
+/* Breakpoints for multi-column */
+@media (min-width: 480px) {
+  #calendar { grid-template-columns: repeat(2, 1fr); }
+  :root { --day-size: 32px; --day-font: 0.7rem; --turn-width: 26px; --month-gap: 0.4rem; }
+}
+@media (min-width: 768px) {
+  #calendar { grid-template-columns: repeat(3, 1fr); }
+  :root { --day-size: 30px; --day-font: 0.68rem; --turn-width: 24px; --month-gap: 0.35rem; }
+}
+@media (min-width: 1024px) {
+  #calendar { grid-template-columns: repeat(4, 1fr); }
+  :root { --day-size: 28px; --day-font: 0.65rem; --turn-width: 22px; --month-gap: 0.3rem; }
+}
+@media (min-width: 1400px) {
+  #calendar { grid-template-columns: repeat(5, 1fr); }
+  :root { --day-size: 26px; --day-font: 0.62rem; --turn-width: 20px; --month-gap: 0.25rem; }
+}
+
+/* Desktop: sidebar beside calendar */
+@media (min-width: 1024px) {
+  .main { flex-direction: row; align-items: flex-start; padding: 1rem 1.5rem; }
+  .sidebar { width: 260px; flex-shrink: 0; position: sticky; top: 80px; max-height: calc(100vh - 90px); overflow-y: auto; }
+  .calendar-section { flex: 1; }
+  .header { padding: 0.75rem 1.5rem; }
+  .header-title { font-size: 1.5rem; }
+}
+
+/* ----- Month Card ----- */
+.month { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden; display: flex; flex-direction: column; }
+.month-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 0.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Month internal grid: 1 turn column + 7 day columns */
+.month-grid {
+  display: grid;
+  grid-template-columns: var(--turn-width) repeat(7, 1fr);
+  gap: 0;
+}
+
+/* Weekday header row - only on desktop */
+.weekday-row {
+  display: none;
+  grid-column: 1 / -1;
+}
+@media (min-width: 768px) {
+  .weekday-row { display: contents; }
+}
+
+.weekday-corner,
+.weekday-cell {
+  padding: 0.15rem;
+  text-align: center;
+  font-size: 0.55rem;
+  font-weight: 600;
+  color: #888;
+  border-bottom: 1px solid #f0f0f0;
+  background: #fafafa;
+}
+.weekday-corner { grid-column: 1; }
+.weekday-cell { }
+
+/* Week row - each week is a grid row */
+.week-row {
+  display: contents;
+}
+
+/* Turn indicator - same height as a day */
+.week-turn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  grid-column: 1;
+  grid-row: auto;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #fff;
+  border-right: 1px solid rgba(255,255,255,0.2);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  min-height: var(--day-size);
+  padding: 2px 0;
+}
+.week-turn.M { background: #c8e6c9; color: #1b5e20; font-weight: 700; }
+.week-turn.T { background: #bbdefb; color: #0d47a1; font-weight: 700; }
+
+/* Day cells */
+.day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  aspect-ratio: 1;
+  border-right: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f0;
+  background: #fff;
+  transition: background 0.1s;
+  min-height: var(--day-size);
+  min-width: var(--day-size);
+  cursor: pointer;
+  padding: 1px;
+}
+.day:last-child { border-right: none; }
+.week-row:last-child .day { border-bottom: none; }
+.day:hover { background: #f0f5ff; }
+.day.other-month { background: #fafafa; color: #ccc; }
+.day.other-month:hover { background: #f0f0f0; }
+.day-number { font-size: var(--day-font); font-weight: 500; z-index: 1; line-height: 1; }
+.day.today .day-number { color: #667eea; font-weight: 700; }
+
+/* Rest day (green circle) - más grueso */
+.day.is-rest::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border: 3px solid #4caf50;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2; /* encima de festivos */
+}
+
+/* Festivos no laborables (rojo fuerte) */
+.day.holiday {
+  background: #c62828;
+  color: #fff;
+  font-weight: 700;
+}
+
+/* Festivos laborables (naranja oscuro) */
+.day.working-holiday {
+  background: #e65100;
+  color: #fff;
+  font-weight: 700;
+}
+
+/* Círculo verde encima de festivos */
+.day.holiday.is-rest::before,
+.day.working-holiday.is-rest::before {
+  z-index: 3;
+}
+
+/* Painted days - números en negrita */
+.day.painted { cursor: default; }
+.day.painted.color-0 { background: #f06292; color: #fff; }
+.day.painted.color-1 { background: #81c784; color: #fff; }
+.day.painted.color-2 { background: #64b5f6; color: #fff; }
+.day.painted .day-number { color: inherit; font-weight: 700; }
+
+/* Selected tool feedback */
+.day.paint-preview { outline: 2px solid #667eea; outline-offset: -2px; }
+
+/* ----- Legend Tools (in header) ----- */
+.legend-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+.tool-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.15s;
+  padding: 0;
+}
+.tool-btn:hover { border-color: #bbb; transform: translateY(-1px); }
+.tool-btn[aria-checked="true"] {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102,126,234,0.2);
+  transform: scale(1.05);
+}
+.tool-swatch { width: 18px; height: 18px; border-radius: 4px; }
+.tool-icon { width: 16px; height: 16px; color: #666; }
+.tool-btn.tool-erase[aria-checked="true"] .tool-icon { color: #667eea; }
+
+/* Undo button */
+.btn-undo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  color: #666;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.btn-undo:hover:not(:disabled) { background: #f5f5f5; border-color: #ccc; color: #333; }
+.btn-undo:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-undo svg { width: 16px; height: 16px; }
+
+@media (max-width: 480px) {
+  .btn-undo span { display: none; }
+  .tool-btn { width: 32px; height: 32px; }
+  .tool-swatch { width: 16px; height: 16px; }
+  .tool-icon { width: 14px; height: 14px; }
+}
+
+/* ----- Stats ----- */
+.stats { background: #fff; border-radius: 8px; padding: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+.stats h2 { margin: 0 0 0.5rem; font-size: 0.8rem; font-weight: 600; color: #333; }
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.35rem; }
+.stat-item { text-align: center; padding: 0.4rem; background: #fafafa; border-radius: 6px; }
+.stat-label { display: block; font-size: 0.55rem; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.15rem; }
+.stat-value { font-size: 1.2rem; font-weight: 700; color: #1a1a2e; line-height: 1; }
+.stat-item.stat-total { grid-column: span 3; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+.stat-item.stat-total .stat-label, .stat-item.stat-total .stat-value { color: #fff; }
+.stat-item.stat-long-weekends { grid-column: span 3; background: #e8f5e9; }
+.stat-item.stat-long-weekends .stat-value { color: #2e7d32; }
+.stat-item.stat-sundays-vacation { grid-column: span 3; background: #f3e5f5; }
+.stat-item.stat-sundays-vacation .stat-value { color: #7b1fa2; }
+.stat-item.stat-rest-vacation { grid-column: span 3; background: #fff3e0; }
+.stat-item.stat-rest-vacation .stat-value { color: #e65100; }
+
+/* ----- Focus visible ----- */
+:focus-visible { outline: 2px solid #667eea; outline-offset: 2px; }
+
+/* ----- Reduced motion ----- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ----- Print ----- */
+@media print {
+  .header, .sidebar, .week-turn { display: none; }
+  .main { flex-direction: column; }
+  .month { break-inside: avoid; page-break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
+  .day { border-color: #ddd; }
+}
