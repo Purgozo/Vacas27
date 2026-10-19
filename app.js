@@ -116,6 +116,25 @@ function countRestDaysInVacation(paintedDays, grupo) {
   return count - countSundaysInVacation(paintedDays);
 }
 
+/**
+ * Cuenta festivos fijos (incluye laborables) que caen en día de libranza del grupo
+ * EXCLUYE domingos
+ * Se recalcula cada vez, no se persiste
+ */
+function countHolidaysOnRestDays(grupo) {
+  let count = 0;
+  const allHolidays = { ...FIXED_HOLIDAYS, ...WORKING_HOLIDAYS };
+  
+  for (const [key, name] of Object.entries(allHolidays)) {
+    const date = fromKey(key);
+    // Excluir domingos
+    if (getWeekday(date) === 6) continue;
+    // Verificar si es día de libranza para el grupo
+    if (isLibranza(date, grupo)) count++;
+  }
+  return count;
+}
+
 // ========================================
 // LÓGICA PURA (sin DOM, testeable)
 // ========================================
@@ -399,7 +418,8 @@ function computeStats(paintedDays, grupo, turno) {
   const longWeekends = countLongWeekends(paintedDays, grupo, turno);
   const sundaysInVacation = countSundaysInVacation(paintedDays);
   const restDaysInVacation = countRestDaysInVacation(paintedDays, grupo);
-  return { counts, total, longWeekends, sundaysInVacation, restDaysInVacation };
+  const holidaysOnRestDays = countHolidaysOnRestDays(grupo);
+  return { counts, total, longWeekends, sundaysInVacation, restDaysInVacation, holidaysOnRestDays };
 }
 
 // ========================================
@@ -494,7 +514,8 @@ function getDOMElements() {
     total: document.getElementById('stat-total'),
     longWeekends: document.getElementById('stat-long-weekends'),
     sundaysInVacation: document.getElementById('stat-sundays-in-vacation'),
-    restDaysInVacation: document.getElementById('stat-rest-days-in-vacation')
+    restDaysInVacation: document.getElementById('stat-rest-days-in-vacation'),
+    holidaysOnRestDays: document.getElementById('stat-holidays-on-rest')
   };
 }
 
@@ -634,6 +655,7 @@ function renderStats() {
   statEls.longWeekends.textContent = stats.longWeekends;
   statEls.sundaysInVacation.textContent = stats.sundaysInVacation;
   statEls.restDaysInVacation.textContent = stats.restDaysInVacation;
+  statEls.holidaysOnRestDays.textContent = stats.holidaysOnRestDays;
 }
 
 function updateUndoButton() {
@@ -855,6 +877,7 @@ if (typeof module !== 'undefined' && module.exports) {
     computeStats,
     countSundaysInVacation,
     countRestDaysInVacation,
+    countHolidaysOnRestDays,
     isBlockingHoliday
   };
 }

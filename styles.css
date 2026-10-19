@@ -315,6 +315,8 @@ body {
 .stat-item.stat-sundays-vacation .stat-value { color: #7b1fa2; }
 .stat-item.stat-rest-vacation { grid-column: span 3; background: #fff3e0; }
 .stat-item.stat-rest-vacation .stat-value { color: #e65100; }
+.stat-item.stat-holidays-rest { grid-column: span 3; background: #ffebee; }
+.stat-item.stat-holidays-rest .stat-value { color: #c62828; }
 
 /* ----- Focus visible ----- */
 :focus-visible { outline: 2px solid #667eea; outline-offset: 2px; }

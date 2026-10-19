@@ -66,6 +66,7 @@ Verificar manual: añadir sesión → aparece en la lista, los datos sobreviven 
 - **Domingos en vacaciones**: domingos que están pintados → contador (recalculado, no persistido)
 - **Descansos en vacaciones**: días de libranza semanales del grupo (excluye domingos) que caen en días pintados → contador (recalculado, no persistido)
   - Fórmula: `total libranzas pintadas - domingos en vacaciones`
+- **Festivos en descanso**: festivos fijos (incluye laborables) que caen en día de libranza del grupo (excluye domingos) → contador (recalculado, no persistido)
 
 ### Festivos 2027
 - **14 festivos fijos** (12 no laborables + 2 laborables: 25 mar, 16 ago): **no se pueden pintar**, se saltan en rangos, visual rojo/naranja, **no clicables** (inline style `pointer-events: none`)
