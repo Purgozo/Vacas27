@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configuración - Vacas27</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-left">
+      <h1 class="header-title">Configuración</h1>
+    </div>
+    <div class="header-right">
+      <button type="button" id="back-btn" class="btn-back" aria-label="Atrás sin guardar" title="Atrás sin guardar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        <span>Atrás sin guardar</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="main-config">
+    <section class="config-section" aria-label="Configuración de festivos locales">
+      <h2>Configuración de días festivos locales</h2>
+      
+      <div class="config-list" id="holidays-list" role="list" aria-label="Festivos locales configurados">
+        <!-- Se llena dinámicamente -->
+      </div>
+      
+      <div class="config-add">
+        <label for="new-holiday-date" class="visually-hidden">Fecha del nuevo festivo local</label>
+        <input type="date" id="new-holiday-date" min="2027-01-04" max="2027-12-31" required>
+        <button type="button" id="add-holiday-btn" class="btn-add" aria-label="Añadir festivo local">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+          <span>Añadir festivo</span>
+        </button>
+      </div>
+      
+      <div class="config-actions">
+        <button type="button" id="save-btn" class="btn-save">Guardar cambios</button>
+      </div>
+      
+      <div id="config-message" class="config-message" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+  <script src="config.js"></script>
+</body>
+</html>

@@ -34,7 +34,7 @@ v1.5 - Nueva stat "Descansos en vacaciones". 61 tests pasando.
    - Bug truthiness en `!paintedDays[key]` (color 0 es falsy) → usar `!(key in paintedDays)`
 
 ## Estado actual
-v1.6 - Nueva stat "Festivos en descanso (excluye domingos)". 65 tests pasando.
+v1.10 - Botón Generar PDF con modal de configuración. 65 tests pasando.
 
 ## Decisiones (y por qué)
 - Spec base = AGENTS.md actualizado (no specs/NNN/)
@@ -65,18 +65,26 @@ v1.6 - Nueva stat "Festivos en descanso (excluye domingos)". 65 tests pasando.
    - Faltaba check `isLibranza(lunes, grupo)` (solo verificaba sábado)
    - Bug truthiness en `!paintedDays[key]` (color 0 es falsy) → usar `!(key in paintedDays)`
 
-## Festivos v1.6
+## Festivos v1.7
 - **14 festivos fijos** (12 no laborables + 2 laborables 25 mar, 16 ago): bloquean pintura/rangos, visual rojo/naranja, no clicables (inline style)
+- **Festivos locales** (configurables, máx 5): por defecto 10 feb y 8 sep, se guardan en localStorage, mismo comportamiento que festivos fijos
 - **Domingos**: festivo visual (rojo/naranja) → **SÍ paintable** individual y rangos, clicables
 - Excepción: domingos 26 jun – 29 ago = festivo laborable visual (naranja)
 - Círculo verde libranza encima (z-index: 3)
 - Fines de semana largos: festivos se ignoran (cuentan como días libres)
 
-## Stats v1.6
+## Stats v1.7
 - **Domingos en vacaciones**: domingos en `paintedDays` → contador recalculado (no persistido)
 - **Descansos en vacaciones**: días de libranza semanales del grupo (excluye domingos) en `paintedDays` → contador recalculado (no persistido)
   - Fórmula: `total libranzas pintadas - domingos en vacaciones`
-- **Festivos en descanso**: festivos fijos (incluye laborables) que caen en día de libranza del grupo (excluye domingos) → contador recalculado (no persistido)
+- **Festivos en descanso**: festivos fijos + locales que caen en día de libranza del grupo (excluye domingos) → contador recalculado (no persistido)
+
+## Configuración festivos locales v1.7
+- Página `config.html` con lista, botón borrar, input date para añadir (min 4 ene, max 31 dic 2027)
+- Validaciones: no domingo, no duplicado, rango 4 ene-31 dic 2027, máx 5
+- Botones: "Guardar cambios" (persiste + limpia pintados en nuevos festivos) / "Atrás sin guardar" (`history.back()`)
+- Botón ⚙️ en header para acceder a config
+- Al guardar: limpia días pintados que coincidan con NUEVOS festivos locales
 
 ## Rangos con festivos
 - `paintRange`: salta `isBlockingHoliday` (continue) → pinta antes y después
@@ -90,16 +98,25 @@ v1.6 - Nueva stat "Festivos en descanso (excluye domingos)". 65 tests pasando.
   3. Festivos fijos (rojo) y laborables (naranja) no clicables
   4. Círculo verde libranza encima de festivos
   5. Stats "Domingos en vacaciones", "Descansos en vacaciones" y "Festivos en descanso" actualizadas
+  6. Botón Deshacer: icono claro, fondo azul suave, visible en móvil
+  7. Botón Configuración ⚙️ abre config.html
+  8. Config: añadir/borrar festivos locales, guardar, volver
+## v1.8.1 - Botón Info modal accesible
+- Botón Info (ⓘ) en header con icono ⓘ
+- Modal accesible usando `<dialog>` nativo
+- Contenido: app, desarrollador (Álvaro), versión 1.7.0, fecha Oct 2026, aviso de errores
+- Accesibilidad: ESC para cerrar, click en backdrop, focus en botón cerrar, ARIA labels
+- Animaciones suaves (fade in/out), backdrop semitransparente
+- Botón Info (ⓘ) en header-right junto a Configuración y Deshacer
+- 65 tests pasando
 
-## Rangos con festivos
-- `paintRange`: salta `isBlockingHoliday` (continue) → pinta antes y después
-- `hasPaintedInRange`: ignora `isBlockingHoliday` → no cuentan como "pintados en medio"
-- Render: solo festivos bloqueantes tienen `pointer-events: none` (inline)
-
-## Próximos pasos
-- Verificación manual completa en navegador:
-  1. Clic 4 ene → clic 8 ene → pinta 4,5, **salta 6**, 7,8
-  2. Domingos se pueden pintar individualmente y en rangos
-  3. Festivos fijos (rojo) y laborables (naranja) no clicables
-  4. Círculo verde libranza encima de festivos
-  5. Stats "Domingos en vacaciones" y "Descansos en vacaciones" actualizadas
+## v1.12 - Generación de PDF programática (sin html2canvas)
+- Botón PDF (📄) en header → abre modal de configuración
+- Modal con: nombre archivo personalizable, opción incluir leyenda, vista previa
+- Genera PDF A4 vertical con calendario (3 columnas × 4 filas) + estadísticas
+- **Usa jsPDF puro (sin html2canvas)**, dibuja el calendario programáticamente
+- Nombre archivo personalizable: `Vacas27_2027_Grupo{X}_Turno{Y}.pdf`
+- Incluye estadísticas completas + festivos locales en página 2
+- Loading state en botón durante generación
+- **Leyenda**: solo colores de pintura, festivos (fijo/laborable) y libranza; **festivos locales NO aparecen en leyenda** (solo en página 2 de estadísticas)
+- 65 tests pasando

@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vacas27 — Calendario 2027</title>
   <link rel="stylesheet" href="styles.css">
+  <!-- jsPDF para generación de PDF -->
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 </head>
 <body>
   <header class="header">
@@ -51,9 +53,34 @@
         </div>
       </div>
       <div class="legend-tools" id="legend-tools-right" role="radiogroup" aria-label="Acciones">
+        <a href="config.html" class="btn-config" aria-label="Configuración" title="Configuración">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+          </svg>
+          <span>Configuración</span>
+        </a>
+        <button type="button" id="pdf-btn" class="btn-pdf" aria-label="Generar PDF" title="Generar PDF">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <line x1="10" y1="9" x2="8" y2="9"/>
+            <line x1="16" y1="9" x2="14" y2="9"/>
+          </svg>
+          <span>PDF</span>
+        </button>
+        <button type="button" id="info-btn" class="btn-info" aria-label="Información" title="Información">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 16v-4M12 8h.01"/>
+          </svg>
+          <span>Info</span>
+        </button>
         <button type="button" id="undo-btn" class="btn-undo" disabled aria-label="Deshacer última acción" title="Deshacer (Ctrl+Z)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M3 7v6h6M3 13a9 9 0 1 0 2.7-6.3L3 7"/>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
           </svg>
           <span>Deshacer</span>
         </button>
@@ -104,8 +131,90 @@
           </div>
         </div>
       </section>
+      
+      <section class="local-holidays" aria-label="Festivos locales">
+        <h2>Festivos locales</h2>
+        <div id="local-holidays-list" class="local-holidays-list"></div>
+      </section>
     </aside>
   </main>
+
+  <!-- Info Modal -->
+  <dialog id="info-modal" class="info-modal" aria-labelledby="info-modal-title" aria-modal="true">
+    <div class="info-modal-content">
+      <header class="info-modal-header">
+        <h2 id="info-modal-title">Información</h2>
+        <button type="button" id="info-close" class="info-close" aria-label="Cerrar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </header>
+      <div class="info-modal-body">
+        <div class="info-item">
+          <strong>Aplicación:</strong> Vacas27 — Calendario 2027
+        </div>
+        <div class="info-item">
+          <strong>Desarrollador:</strong> Álvaro Gómez
+        </div>
+        <div class="info-item">
+          <strong>Versión:</strong> 1.7.0 (Estable)
+        </div>
+        <div class="info-item">
+          <strong>Fecha:</strong> Octubre 2026
+        </div>
+        <div class="info-warning">
+          ⚠️ <strong>Aviso:</strong> Esta aplicación puede contener errores. Úsela bajo su propia responsabilidad.
+        </div>
+      </div>
+      <footer class="info-modal-footer">
+        <button type="button" id="info-ok" class="btn-info-ok">Entendido</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <!-- PDF Modal -->
+  <dialog id="pdf-modal" class="pdf-modal" aria-labelledby="pdf-modal-title" aria-modal="true">
+    <div class="pdf-modal-content">
+      <header class="pdf-modal-header">
+        <h2 id="pdf-modal-title">Generar PDF</h2>
+        <button type="button" id="pdf-close" class="pdf-close" aria-label="Cerrar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </header>
+      <div class="pdf-modal-body">
+        <div class="pdf-option">
+          <label for="pdf-filename">Nombre del archivo:</label>
+          <input type="text" id="pdf-filename" class="pdf-filename-input" placeholder="Vacas27_2027_Grupo1_TurnoM.pdf" value="Vacas27_2027_Grupo1_TurnoM.pdf">
+        </div>
+        <div class="pdf-options">
+          <label class="pdf-checkbox">
+            <input type="checkbox" id="pdf-include-legend" checked>
+            <span>Incluir leyenda de colores</span>
+          </label>
+        </div>
+        <div class="pdf-preview-info">
+          <small>El PDF incluirá el calendario completo (12 meses en 3 columnas) y las estadísticas completas.</small>
+        </div>
+      </div>
+      <footer class="pdf-modal-footer">
+        <button type="button" id="pdf-cancel" class="btn-pdf-cancel">Cancelar</button>
+        <button type="button" id="pdf-generate" class="btn-pdf-generate">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;margin-right:4px;">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <line x1="10" y1="9" x2="8" y2="9"/>
+            <line x1="16" y1="9" x2="14" y2="9"/>
+          </svg>
+          <span id="pdf-btn-text">Generar PDF</span>
+        </button>
+      </footer>
+    </div>
+  </dialog>
 
   <script src="app.js"></script>
 </body>

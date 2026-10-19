@@ -71,6 +71,7 @@ Verificar manual: añadir sesión → aparece en la lista, los datos sobreviven 
 ### Festivos 2027
 - **14 festivos fijos** (12 no laborables + 2 laborables: 25 mar, 16 ago): **no se pueden pintar**, se saltan en rangos, visual rojo/naranja, **no clicables** (inline style `pointer-events: none`)
 - **Domingos**: festivo visual (rojo/naranja) pero **SÍ se pueden pintar** individualmente y en rangos, clicables
+- **Festivos locales** (configurables, máx 5): por defecto 10 feb y 8 sep, se guardan en localStorage, mismo comportamiento que festivos fijos
 - **CSS festivos solo visual** (color, font-weight), **interacción controlada por JS** (solo festivos bloqueantes reciben `pointer-events: none` inline)
 - Círculo verde libranza encima de festivos (z-index superior)
 
@@ -79,12 +80,20 @@ Verificar manual: añadir sesión → aparece en la lista, los datos sobreviven 
 - **Botón Deshacer**: guarda snapshot antes de cada acción completa (pintar rango / borrar rango). Un solo nivel. Deshabilitado si no hay historial o ya usado.
 - Cambiar turno/grupo recalcula libranzas y fines de semana largos (no persiste, se recalcula)
 
-## Convenciones
-- Textos de la UI solo en español.
-- Sin frameworks, sin compilación, sin scripts externos.
-- Los tres archivos deben quedar en la misma carpeta (rutas relativas).
-- Lógica pura en funciones separadas (sin DOM/localStorage), testeables con `node --test`
-- Código en inglés, UI en español
+### Información de la App
+- Botón **Info** (ⓘ) en header → abre modal accesible
+- Modal con: nombre app, desarrollador, versión, fecha, aviso de errores
+- Accesible: ESC para cerrar, click en backdrop, focus trap, ARIA labels
+
+### Generar PDF
+- Botón **PDF** (📄) en header → abre modal de configuración
+- Modal con: nombre archivo personalizable, opción incluir leyenda, vista previa
+- Genera PDF A4 vertical con calendario (3 columnas × 4 filas) + estadísticas
+- **Usa jsPDF puro (sin html2canvas)**, dibuja el calendario programáticamente
+- Nombre archivo personalizable: `Vacas27_2027_Grupo{X}_Turno{Y}.pdf`
+- Incluye estadísticas completas + festivos locales en página 2
+- Loading state en botón durante generación
+- **Leyenda**: solo colores de pintura, festivos (fijo/laborable) y libranza; **festivos locales NO aparecen en leyenda** (solo en página 2 de estadísticas)
 
 ## Tareas Comunes
 | Tarea | Cómo |
@@ -103,3 +112,7 @@ Verificar manual: añadir sesión → aparece en la lista, los datos sobreviven 
 - No hay tests automáticos. Después de cada cambio, verifica con el MCP de Chrome
 DevTools: abre `index.html`, prueba la funcionalidad, revisa la consola y comprueba la
 vista móvil.
+### Información de la App
+- Botón **Info** (ⓘ) en header → abre modal accesible
+- Modal con: nombre app, desarrollador, versión, fecha, aviso de errores
+- Accesible: ESC para cerrar, click en backdrop, focus trap, ARIA labels
